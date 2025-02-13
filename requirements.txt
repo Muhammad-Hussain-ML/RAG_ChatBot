@@ -1,0 +1,8 @@
+streamlit
+streamlit-option-menu
+PyPDF2
+qdrant-client
+langchain
+langchain-google-genai
+langchain-community
+langchain-text-splitters

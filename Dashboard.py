@@ -80,8 +80,8 @@ def pdf_to_qdrant_page():
     """)
 
     uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
-    unique_id = st.text_input("Enter a Unique Product ID:")
-    collection_name = "documents_collection"
+    unique_id = st.text_input("Enter a Unique  ID:")
+    collection_name = "new_documents_collection"
     run_pipeline = st.button("Run Pipeline")
 
     qdrant_client = QdrantClient(
@@ -146,9 +146,11 @@ def query_ai_page():
         api_key=os.getenv("QDRANT_API_KEY"),
     )
     api_key = os.getenv("GOOGLE_API_KEY")
-    collection_name = "documents_collection"
+    collection_name = "new_documents_collection"
 
     user_query = st.text_input("Enter your Query:")
+    unique_id = st.text_input("Enter Unique Product ID:")
+    
     if st.button("Run Query"):
         if api_key and qdrant_client and collection_name and user_query:
             try:

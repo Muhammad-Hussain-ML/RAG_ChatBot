@@ -95,6 +95,8 @@ def pdf_to_qdrant_page():
             for i in range(len(embeddings))
         ]
         qdrant_client.upsert(collection_name=collection_name, points=points)
+
+        return True
         
     st.title("PDF to Qdrant Embedding Pipeline")
     st.write("""

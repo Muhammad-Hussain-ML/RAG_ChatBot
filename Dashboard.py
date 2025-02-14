@@ -53,26 +53,6 @@ def pdf_to_qdrant_page():
         embeddings_model = GoogleGenerativeAIEmbeddings(model=model_name)
         return [embeddings_model.embed_query(chunk.page_content) for chunk in chunks]
 
-    # def create_qdrant_collection(qdrant_client, collection_name, vector_size):
-    #     existing_collections = [col.name for col in qdrant_client.get_collections().collections]
-    #     if collection_name in existing_collections:
-    #         qdrant_client.delete_collection(collection_name)
-    #     qdrant_client.create_collection(
-    #         collection_name=collection_name,
-    #         vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE)
-    #     )
-
-    # def store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks, unique_id):
-    #     create_qdrant_collection(qdrant_client, collection_name, len(embeddings[0]))
-    #     points = [
-    #         PointStruct(
-    #             id=i, vector=embeddings[i],
-    #             payload={"unique_id": unique_id, "chunk_id": i, "text": text_chunks[i].page_content}
-    #         )
-    #         for i in range(len(embeddings))
-    #     ]
-    #     qdrant_client.upsert(collection_name=collection_name, points=points)
-
     def store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks):
         st.success("Creating Embeddings Qdrant")
         vector_size = len(embeddings[0])
@@ -153,6 +133,11 @@ def query_ai_page():
         conversation = ConversationalRetrievalChain.from_llm(llm=llm, retriever=retriever, memory=memory, verbose=False)
         return conversation.run(user_query)
 
+    def collections_list(qdrant_client):
+        
+        collections = [col.name for col in qdrant_client.get_collections().collections]
+        return collections
+
     def pipeline(api_key, qdrant_client, collection_name, user_query, top_k=3):
         query_embeddings = query_embedding(user_query, api_key)
         related_texts = search_related_text(query_embeddings, collection_name, top_k)
@@ -167,24 +152,33 @@ def query_ai_page():
         return generate_response(retriever, api_key, user_query)
 
     st.title("AI Query Pipeline")
-    st.write("Enter a query to interact with stored document embeddings.")
+    st.write("Looking for specific information? Type your question and select the Hospital ID (Name) to get results instantly!")
 
     qdrant_client = QdrantClient(
         url=os.getenv("QDRANT_URL"),
         api_key=os.getenv("QDRANT_API_KEY"),
     )
     api_key = os.getenv("GOOGLE_API_KEY")
-    collection_name = "new_documents_collection"
 
-    user_query = st.text_input("Enter your Query:")
-    unique_id = st.text_input("Enter Unique Product ID:")
+    # Fetch unique IDs for the dropdown
+    with st.spinner("Fetching Hospitals Names..."):
+        try:
+            hospitals = collections_list(qdrant_client)
+            if not hospitals:
+                hospitals = ["Hospital is not stored yet."]  # Fallback option if none are found
+        except Exception as e:
+            st.error(f"Error fetching Hospiatl ID: {e}")
+            hospitals = ["Error fetching Hospiatl ID"]
+
+    
+    user_query = st.text_input("Enter your Query:")    
+    collection_name = st.selectbox("Select Hospiatl ID/Name:", options=hospitals)
     
     if st.button("Run Query"):
         if api_key and qdrant_client and collection_name and user_query:
             try:
                 with st.spinner("Processing your query..."):
                     response = pipeline(api_key, qdrant_client, collection_name, user_query)
-                st.success("Query executed successfully!")
                 st.write("Generated Response:", response)
             except Exception as e:
                 st.error(f"An error occurred: {e}")

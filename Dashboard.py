@@ -114,7 +114,7 @@ def pdf_to_qdrant_page():
     api_key = os.getenv("GOOGLE_API_KEY")
 
     if run_pipeline:
-        if uploaded_file and unique_id:
+        if uploaded_file and collection_name:
             try:
                 with st.spinner("Processing the PDF..."):
                     pdf_text = extract_text_from_pdf(uploaded_file)

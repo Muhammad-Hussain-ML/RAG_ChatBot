@@ -53,26 +53,49 @@ def pdf_to_qdrant_page():
         embeddings_model = GoogleGenerativeAIEmbeddings(model=model_name)
         return [embeddings_model.embed_query(chunk.page_content) for chunk in chunks]
 
-    def create_qdrant_collection(qdrant_client, collection_name, vector_size):
+    # def create_qdrant_collection(qdrant_client, collection_name, vector_size):
+    #     existing_collections = [col.name for col in qdrant_client.get_collections().collections]
+    #     if collection_name in existing_collections:
+    #         qdrant_client.delete_collection(collection_name)
+    #     qdrant_client.create_collection(
+    #         collection_name=collection_name,
+    #         vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE)
+    #     )
+
+    # def store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks, unique_id):
+    #     create_qdrant_collection(qdrant_client, collection_name, len(embeddings[0]))
+    #     points = [
+    #         PointStruct(
+    #             id=i, vector=embeddings[i],
+    #             payload={"unique_id": unique_id, "chunk_id": i, "text": text_chunks[i].page_content}
+    #         )
+    #         for i in range(len(embeddings))
+    #     ]
+    #     qdrant_client.upsert(collection_name=collection_name, points=points)
+
+    def store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks):
+        st.success("Creating Embeddings Qdrant")
+        vector_size = len(embeddings[0])
         existing_collections = [col.name for col in qdrant_client.get_collections().collections]
         if collection_name in existing_collections:
-            qdrant_client.delete_collection(collection_name)
+            st.error(f"Hospital ID '{collection_name}' already exists. Please! Enter Unique Hospiatl ID.")
+            return False
+        
+        st.success("Storing Embeddings in Qdrant")
         qdrant_client.create_collection(
             collection_name=collection_name,
             vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE)
         )
 
-    def store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks, unique_id):
-        create_qdrant_collection(qdrant_client, collection_name, len(embeddings[0]))
         points = [
             PointStruct(
                 id=i, vector=embeddings[i],
-                payload={"unique_id": unique_id, "chunk_id": i, "text": text_chunks[i].page_content}
+                payload={ "chunk_id": i, "text": text_chunks[i].page_content}
             )
             for i in range(len(embeddings))
         ]
         qdrant_client.upsert(collection_name=collection_name, points=points)
-
+        
     st.title("PDF to Qdrant Embedding Pipeline")
     st.write("""
         Upload PDF documents, process their content into meaningful chunks,
@@ -80,8 +103,8 @@ def pdf_to_qdrant_page():
     """)
 
     uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
-    unique_id = st.text_input("Enter a Unique  ID:")
-    collection_name = "new_documents_collection"
+    collection_name = st.text_input("Enter a Uique Hospital ID/Name:")
+    # collection_name = "new_documents_collection"
     run_pipeline = st.button("Run Pipeline")
 
     qdrant_client = QdrantClient(
@@ -97,8 +120,10 @@ def pdf_to_qdrant_page():
                     pdf_text = extract_text_from_pdf(uploaded_file)
                     text_chunks = split_text_into_chunks(pdf_text)
                     embeddings = generate_embeddings(text_chunks, api_key)
-                    store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks, unique_id)
-                st.success(f"Pipeline executed successfully!")
+                    success= store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks)
+                if success:
+                    st.success("Pipeline executed successfully!")
+                # st.success(f"Pipeline executed successfully!")
             except Exception as e:
                 st.error(f"An error occurred: {e}")
         else:

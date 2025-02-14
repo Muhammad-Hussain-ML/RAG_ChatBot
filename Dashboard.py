@@ -106,7 +106,6 @@ def pdf_to_qdrant_page():
 
     uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
     collection_name = st.text_input("Enter a Uique Hospital ID/Name:")
-    # collection_name = "new_documents_collection"
     run_pipeline = st.button("Run Pipeline")
 
     qdrant_client = QdrantClient(
@@ -124,8 +123,10 @@ def pdf_to_qdrant_page():
                     embeddings = generate_embeddings(text_chunks, api_key)
                     success= store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks)
                 if success:
-                    st.success("Pipeline executed successfully!")
-                # st.success(f"Pipeline executed successfully!")
+                    st.success(f"Data successfully stored in Qdrant under the collection: '{collection_name}'.")
+                else:
+                    st.error(f"Failed to store data in Qdrant. Please check the collection name '{collection_name}' or try again.")
+                    
             except Exception as e:
                 st.error(f"An error occurred: {e}")
         else:

@@ -1,6 +1,6 @@
+PyPDF2 
 streamlit
 streamlit-option-menu
-PyPDF2
 qdrant-client
 langchain
 langchain-google-genai

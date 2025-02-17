@@ -125,7 +125,7 @@ def query_ai_page():
         embeddings_model = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004", google_api_key=api_key)
         return embeddings_model.embed_query(query)
 
-    def search_related_text(query_embedding, collection_name, top_k=3):
+    def search_related_text(query_embedding,unique_id, collection_name, top_k=3):
         search_results = qdrant_client.query_points(
             collection_name=collection_name,
             query=query_embedding,

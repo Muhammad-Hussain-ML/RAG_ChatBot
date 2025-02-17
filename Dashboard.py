@@ -255,7 +255,7 @@ def query_ai_page():
         if api_key and qdrant_client and collection_name and user_query:
             try:
                 with st.spinner("Processing your query..."):
-                    response = pipeline(api_key, qdrant_client, collection_name, user_query,unique_id)
+                    response = pipeline(api_key, qdrant_client, collection_name, user_query,unique_id,top_k=2)
                 st.write("Generated Response:", response)
             except Exception as e:
                 st.error(f"An error occurred: {e}")

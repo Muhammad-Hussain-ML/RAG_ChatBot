@@ -8,6 +8,7 @@ from qdrant_client import QdrantClient
 from langchain.vectorstores import Qdrant
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
+from langchain.schema import HumanMessage, AIMessage
 import os
 
 # Define the Home Page
@@ -138,49 +139,49 @@ def query_ai_page():
         ]
 
     def generate_response(llm, related_texts, user_query):
-    memory = st.session_state.chat_history  # Use session memory
-    conversation_history = st.session_state.chat_history.chat_memory.messages
-
-    # conversation_history = memory.chat_memory.messages
-    formatted_history = "\n".join([
-        f"User: {message.content}" if isinstance(message, HumanMessage) else f"Assistant: {message.content}"
-        for message in conversation_history
-    ])
+        memory = st.session_state.chat_history  # Use session memory
+        conversation_history = st.session_state.chat_history.chat_memory.messages
     
-    st.success(f"{formatted_history}\n")
-    if related_texts:
-        formatted_text = "\n".join(related_texts)
-        prompt = f"""
-        You are an interactive assistant who answers questions in a friendly and conversational tone, just like a real person from the company. 
-        Your responses should sound natural, concise, warm, and engaging—like you're having a chat with the user. 
-        Imagine you're speaking directly to the user, just like how a colleague from the company would interact with them. 
-        If there’s no answer, politely let the user know.
+        # conversation_history = memory.chat_memory.messages
+        formatted_history = "\n".join([
+            f"User: {message.content}" if isinstance(message, HumanMessage) else f"Assistant: {message.content}"
+            for message in conversation_history
+        ])
         
-        Here’s the relevant information that you should keep in mind:
-        {formatted_text}
-
-        Here's the conversation history so far:
-        {formatted_history}
-
-        Now, answer the user's question in a way that makes them feel like they're talking to a real person from the company. Feel free to offer additional insights or ask follow-up questions if needed. The user's query is:
-        {user_query}
-        """
-    else:
-        prompt = f"""
-        You are an interactive assistant who answers questions in a friendly and conversational tone, just like a real person from the company. 
-        If there’s no relevant information to answer the user’s question, kindly inform them that you don’t have the necessary details and encourage them to ask something else.
-
-        Unfortunately, we don't have relevant information available for your query at the moment. Please feel free to ask something else!
-
-        Here's the conversation history so far:
-        {formatted_history}
-
-        Now, answer the user's question in a way that makes them feel like they're talking to a real person from the company. Feel free to offer additional insights or ask follow-up questions if needed. The user's query is:
-        {user_query}
-        """
-
-    response = llm.invoke(prompt)
-    return response.content.strip()
+        st.success(f"{formatted_history}\n")
+        if related_texts:
+            formatted_text = "\n".join(related_texts)
+            prompt = f"""
+            You are an interactive assistant who answers questions in a friendly and conversational tone, just like a real person from the company. 
+            Your responses should sound natural, concise, warm, and engaging—like you're having a chat with the user. 
+            Imagine you're speaking directly to the user, just like how a colleague from the company would interact with them. 
+            If there’s no answer, politely let the user know.
+            
+            Here’s the relevant information that you should keep in mind:
+            {formatted_text}
+    
+            Here's the conversation history so far:
+            {formatted_history}
+    
+            Now, answer the user's question in a way that makes them feel like they're talking to a real person from the company. Feel free to offer additional insights or ask follow-up questions if needed. The user's query is:
+            {user_query}
+            """
+        else:
+            prompt = f"""
+            You are an interactive assistant who answers questions in a friendly and conversational tone, just like a real person from the company. 
+            If there’s no relevant information to answer the user’s question, kindly inform them that you don’t have the necessary details and encourage them to ask something else.
+    
+            Unfortunately, we don't have relevant information available for your query at the moment. Please feel free to ask something else!
+    
+            Here's the conversation history so far:
+            {formatted_history}
+    
+            Now, answer the user's question in a way that makes them feel like they're talking to a real person from the company. Feel free to offer additional insights or ask follow-up questions if needed. The user's query is:
+            {user_query}
+            """
+    
+        response = llm.invoke(prompt)
+        return response.content.strip()
 
     # def collections_list(qdrant_client):
     def list_unique_ids_in_collection(qdrant_client, collection_name, limit=100):

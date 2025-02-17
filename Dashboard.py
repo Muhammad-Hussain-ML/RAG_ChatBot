@@ -205,7 +205,6 @@ def query_ai_page():
 
         return list(unique_ids)
 
-    # def pipeline(api_key, qdrant_client, collection_name, user_query, top_k=3):
     def pipeline(api_key, qdrant_client, collection_name, user_query, unique_id, top_k=2):
         query_embeddings = query_embedding(user_query, api_key)
         related_texts = search_related_text(query_embeddings, unique_id, collection_name, top_k=top_k)
@@ -256,7 +255,7 @@ def query_ai_page():
         if api_key and qdrant_client and collection_name and user_query:
             try:
                 with st.spinner("Processing your query..."):
-                    response = pipeline(api_key, qdrant_client, collection_name, user_query)
+                    response = pipeline(api_key, qdrant_client, collection_name, user_query,unique_id)
                 st.write("Generated Response:", response)
             except Exception as e:
                 st.error(f"An error occurred: {e}")

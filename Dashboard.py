@@ -246,7 +246,8 @@ def query_ai_page():
     )
     
     collection_name = "new_documents_practice"
-    api_key = os.getenv("GOOGLE_API_KEY")if not api_key:
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
         st.error("Google API Key is missing! Please check your environment variables.")
 
     # Fetch unique IDs for the dropdown

@@ -264,7 +264,7 @@ def query_ai_page():
     st.markdown("""
          <style>
                .block-container {
-                    padding-top: 1rem;
+                    padding-top: 5rem;
                     padding-bottom: 0rem;
                     padding-left: 0rem;
                     padding-right: 5rem;
@@ -275,10 +275,7 @@ def query_ai_page():
     # user_query = st.text_input("Enter your Query:")    
     # unique_id = st.selectbox("Select Hospiatl ID/Name:", options=hospitals)
 
-    # here change
-    if unique_id != st.session_state.last_unique_id:
-        st.session_state.chat_history = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-        st.session_state.last_unique_id = unique_id 
+   
     # Page Content
     col1, col2 = st.columns([2, 1])  # Two columns with ratio (3:1)
     
@@ -288,6 +285,11 @@ def query_ai_page():
     
     with col2:
         unique_id = st.selectbox("Select Hospital Name/ID:", options=unique_ids)
+
+     # here change
+    if unique_id != st.session_state.last_unique_id:
+        st.session_state.chat_history = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+        st.session_state.last_unique_id = unique_id 
 
     if "messages" not in st.session_state:
       st.session_state.messages = []

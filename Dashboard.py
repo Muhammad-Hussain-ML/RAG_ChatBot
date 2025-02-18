@@ -186,7 +186,7 @@ def query_ai_page():
         response = llm.invoke(prompt)
         response.content.strip()
         
-        if related_text:
+        if related_texts:
             st.session_state.chat_history.chat_memory.add_user_message(user_query)
             st.session_state.chat_history.chat_memory.add_ai_message(response)
 

@@ -277,14 +277,20 @@ def query_ai_page():
 
    
     # Page Content
-    col1, col2 = st.columns([2, 1])  # Two columns with ratio (3:1)
+    col1, col2 = st.columns([3, 1])  # Two columns with ratio (3:1)
     
     # Title and Unique ID dropdown placed side by side
     with col1:
         st.title("AI Query Chat")
     
     with col2:
-        unique_id = st.selectbox("Select Hospital Name/ID:", options=unique_ids)
+        option = st.selectbox(
+            "How would you like to be contacted?",
+            ("Email", "Home phone", "Mobile phone"),
+            index=None,
+            placeholder="Select contact method...",
+        )
+        unique_id = st.selectbox("Select Hospital Name/ID:", index=None, placeholder="Select contact method...", options=unique_ids)
 
      # here change
     if unique_id != st.session_state.last_unique_id:

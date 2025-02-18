@@ -276,7 +276,7 @@ def query_ai_page():
         st.session_state.last_unique_id = unique_id 
         
     if st.button("Run Query"):
-        if api_key and qdrant_client and collection_name and user_query:
+        if google_api_key and qdrant_client and collection_name and user_query:
             try:
                 with st.spinner("Processing your query..."):
                     response = pipeline(google_api_key, qdrant_client, collection_name, user_query,unique_id,top_k=4)

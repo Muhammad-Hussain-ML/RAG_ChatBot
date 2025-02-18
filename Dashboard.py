@@ -154,6 +154,7 @@ def query_ai_page():
             formatted_text = "\n".join(related_texts)
             prompt = f"""
             You are a hospital's interactive assistant, designed to answer queries related to this hospital in a professional, friendly, and helpful manner. 
+            Imagine you're speaking directly to the user, just like how a hospital representative or colleague would interact with them—warm, clear, and helpful.
             Your responses should be **strictly based on the relevant hospital information provided**. 
             You must **only** answer questions related to this hospital. If a query is unrelated, politely inform the user.
         
@@ -175,6 +176,7 @@ def query_ai_page():
         else:
             prompt = f"""
             You are a hospital's interactive assistant, designed to answer queries related to this hospital in a professional, friendly, and helpful manner.  
+            Imagine you're speaking directly to the user, just like how a hospital representative or colleague would interact with them—warm, clear, and helpful.
             Since no relevant information is currently available, please politely inform the user.
         
             **Unfortunately, I don’t have specific information available for your query at the moment.**  

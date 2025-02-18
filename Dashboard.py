@@ -136,7 +136,8 @@ def query_ai_page():
             limit=top_k
         )
         return [
-            result.payload["text"]
+            # result.payload["text"]
+            result.payload.get("text", "No related text available")
             for result in search_results.points
             if result.payload.get("unique_id") == unique_id
         ]
@@ -149,7 +150,7 @@ def query_ai_page():
             f"User: {message.content}" if isinstance(message, HumanMessage) else f"Assistant: {message.content}"
             for message in conversation_history
         ])
-        st.success(f"History:\n{formatted_history}\n")
+        st.success(f""Conversation history loaded:\n{formatted_history}\n")
         if related_texts:
             formatted_text = "\n".join(related_texts)
             prompt = f"""
@@ -245,7 +246,8 @@ def query_ai_page():
     )
     
     collection_name = "new_documents_practice"
-    api_key = os.getenv("GOOGLE_API_KEY")
+    api_key = os.getenv("GOOGLE_API_KEY")if not api_key:
+    st.error("Google API Key is missing! Please check your environment variables.")
 
     # Fetch unique IDs for the dropdown
     with st.spinner("Fetching Hospitals Names..."):

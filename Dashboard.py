@@ -247,7 +247,7 @@ def query_ai_page():
 
     qdrant_client = QdrantClient(
         url=os.getenv("QDRANT_URL"),
-        qdrant_api_key=os.getenv("QDRANT_API_KEY"),
+        api_key=os.getenv("QDRANT_API_KEY"),
     )
     
     collection_name = "new_documents_practice"

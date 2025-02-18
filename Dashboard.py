@@ -89,7 +89,7 @@ def pdf_to_qdrant_page():
 
     uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
     collection_name = "new_documents_practice"
-    umique_id = st.text_input("Enter a Uique Hospital ID/Name:")
+    unique_id = st.text_input("Enter a Uique Hospital ID/Name:")
     run_pipeline = st.button("Run Pipeline")
 
     qdrant_client = QdrantClient(

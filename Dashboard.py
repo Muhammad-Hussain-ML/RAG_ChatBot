@@ -144,7 +144,7 @@ def query_ai_page():
     def generate_response(llm, related_texts, user_query):
         memory = st.session_state.chat_history  # Use session memory
         conversation_history = st.session_state.chat_history.chat_memory.messages
-       st.success("Response generating")
+        st.success("Response generating")
         # conversation_history = memory.chat_memory.messages
         formatted_history = "\n".join([
             f"User: {message.content}" if isinstance(message, HumanMessage) else f"Assistant: {message.content}"

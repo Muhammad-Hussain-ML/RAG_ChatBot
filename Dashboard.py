@@ -66,14 +66,14 @@ def pdf_to_qdrant_page():
             vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE)
         )
 
-    def store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks):
+    def store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks, unique_id):
         create_qdrant_collection(qdrant_client, collection_name, len(embeddings[0]))
         
         st.success("Storing Embeddings in Qdrant")
         points = [
             PointStruct(
                 id=i, vector=embeddings[i],
-                payload={ "chunk_id": i, "text": text_chunks[i].page_content}
+                payload={ "unique_id": unique_id, "chunk_id": i, "text": text_chunks[i].page_content}
             )
             for i in range(len(embeddings))
         ]
@@ -105,7 +105,7 @@ def pdf_to_qdrant_page():
                     pdf_text = extract_text_from_pdf(uploaded_file)
                     text_chunks = split_text_into_chunks(pdf_text)
                     embeddings = generate_embeddings(text_chunks, api_key)
-                    success= store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks)
+                    success= store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks, unique_id)
                 if success:
                     st.success(f"Data successfully stored in Qdrant under the collection: '{collection_name}'.")
                 else:

@@ -285,7 +285,7 @@ def query_ai_page():
     
     with col2:
         unique_id = st.selectbox(
-            "Select Hospital Name or ID:",
+            "**Select Hospital Name or ID:**",
             index=None,
             placeholder="Select a hospital or ID...",
             options=unique_ids

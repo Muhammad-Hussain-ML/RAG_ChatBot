@@ -195,8 +195,9 @@ def query_ai_page():
             The user's query is:
             {user_query}
             """
-
+        st.success("Response generating")
         response = llm.invoke(prompt)
+        st.success("Resonse{response}")
         return  response.content.strip()
     
     def list_unique_ids_in_collection(qdrant_client, collection_name, limit=100):

@@ -184,7 +184,14 @@ def query_ai_page():
             """
     
         response = llm.invoke(prompt)
-        return response.content.strip()
+        response.content.strip()
+        
+        if related_text:
+            st.session_state.chat_history.chat_memory.add_user_message(user_query)
+            st.session_state.chat_history.chat_memory.add_ai_message(response)
+
+        
+        return response
 
     # def collections_list(qdrant_client):
     def list_unique_ids_in_collection(qdrant_client, collection_name, limit=100):
@@ -218,9 +225,6 @@ def query_ai_page():
             google_api_key=api_key
         )
         response = generate_response(llm, related_texts, user_query)
-
-        st.session_state.chat_history.chat_memory.add_user_message(user_query)
-        st.session_state.chat_history.chat_memory.add_ai_message(response)
     
         return response  
         

@@ -253,12 +253,12 @@ def query_ai_page():
     # Fetch unique IDs for the dropdown
     with st.spinner("Fetching Hospitals Names..."):
         try:
-            hospitals = list_unique_ids_in_collection(qdrant_client,collection_name)
-            if not hospitals:
-                hospitals = ["Hospital is not stored yet."]  # Fallback option if none are found
+            unique_ids = list_unique_ids_in_collection(qdrant_client,collection_name)
+            if not unique_ids:
+                unique_ids = ["Hospital is not stored yet."]  # Fallback option if none are found
         except Exception as e:
             st.error(f"Error fetching hospitals ID: {e}")
-            hospitals = ["Error fetching hospitals ID"]
+            unique_ids = ["Error fetching hospitals ID"]
 
     # Custom CSS to optimize page layout
     st.markdown("""

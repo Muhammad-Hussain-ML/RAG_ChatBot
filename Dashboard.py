@@ -54,20 +54,22 @@ def pdf_to_qdrant_page():
         embeddings_model = GoogleGenerativeAIEmbeddings(model=model_name)
         return [embeddings_model.embed_query(chunk.page_content) for chunk in chunks]
 
-    def store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks):
-        st.success("Creating Embeddings Qdrant")
-        vector_size = len(embeddings[0])
+    def create_qdrant_collection(qdrant_client, collection_name, vector_size):
         existing_collections = [col.name for col in qdrant_client.get_collections().collections]
         if collection_name in existing_collections:
-            st.error(f"Hospital ID '{collection_name}' already exists. Please! Enter Unique Hospiatl ID.")
-            return False
-        
-        st.success("Storing Embeddings in Qdrant")
+            st.warning(f"Collection '{collection_name}' already exists.")
+            return
+
+        st.success("Creating Qdrant Collection for Embeddings")
         qdrant_client.create_collection(
             collection_name=collection_name,
             vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE)
         )
 
+    def store_embeddings_in_qdrant(qdrant_client, collection_name, embeddings, text_chunks):
+        create_qdrant_collection(qdrant_client, collection_name, len(embeddings[0]))
+        
+        st.success("Storing Embeddings in Qdrant")
         points = [
             PointStruct(
                 id=i, vector=embeddings[i],
@@ -86,7 +88,8 @@ def pdf_to_qdrant_page():
     """)
 
     uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
-    collection_name = st.text_input("Enter a Uique Hospital ID/Name:")
+    collection_name = "new_documents_practice"
+    umique_id = st.text_input("Enter a Uique Hospital ID/Name:")
     run_pipeline = st.button("Run Pipeline")
 
     qdrant_client = QdrantClient(

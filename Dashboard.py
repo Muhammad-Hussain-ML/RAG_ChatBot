@@ -182,7 +182,7 @@ def query_ai_page():
             Now, answer the user's question in a way that makes them feel like they're talking to a real person from the company. Feel free to offer additional insights or ask follow-up questions if needed. The user's query is:
             {user_query}
             """
-    
+        st.success("Responseeeeeeeeeeeeeee generating")
         response = llm.invoke(prompt)
         st.success(f"Response:{response}")
         return  response.content.strip()

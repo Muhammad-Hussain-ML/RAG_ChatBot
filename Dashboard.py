@@ -227,7 +227,7 @@ def query_ai_page():
         st.write(related_texts)
         # st.write(related_texts)
         llm = ChatGoogleGenerativeAI(
-            model="gemini-1.5-pro",
+            model="gemini-2.0-flash-exp",
             temperature=0.6,
             google_api_key=api_key
         )

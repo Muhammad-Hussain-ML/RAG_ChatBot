@@ -184,14 +184,12 @@ def query_ai_page():
             """
     
         response = llm.invoke(prompt)
-        response.content.strip()
         
         if related_texts:
             st.session_state.chat_history.chat_memory.add_user_message(user_query)
             st.session_state.chat_history.chat_memory.add_ai_message(response)
-
         
-        return response
+        return  response.content.strip()
 
     # def collections_list(qdrant_client):
     def list_unique_ids_in_collection(qdrant_client, collection_name, limit=100):

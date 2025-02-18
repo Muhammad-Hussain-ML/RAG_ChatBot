@@ -284,13 +284,12 @@ def query_ai_page():
         st.title("AI Query Chat")
     
     with col2:
-        option = st.selectbox(
-            "How would you like to be contacted?",
-            ("Email", "Home phone", "Mobile phone"),
+        unique_id = st.selectbox(
+            "Select Hospital Name or ID:",
             index=None,
-            placeholder="Select contact method...",
+            placeholder="Select a hospital or ID...",
+            options=unique_ids
         )
-        unique_id = st.selectbox("Select Hospital Name/ID:", index=None, placeholder="Select contact method...", options=unique_ids)
 
      # here change
     if unique_id != st.session_state.last_unique_id:

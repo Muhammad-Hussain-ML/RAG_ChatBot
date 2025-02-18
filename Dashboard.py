@@ -126,6 +126,7 @@ def query_ai_page():
         
     def query_embedding(query, api_key):
         embeddings_model = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004", google_api_key=api_key)
+        st.success("Generating Embeddings")
         return embeddings_model.embed_query(query)
 
     def search_related_text(query_embedding,unique_id, collection_name, top_k=3):

@@ -223,21 +223,14 @@ def query_ai_page():
 
     def pipeline(api_key, qdrant_client, collection_name, user_query, unique_id, top_k=4):
         query_embeddings = query_embedding(user_query, api_key)
-        related_texts = search_related_text(query_embeddings, unique_id, collection_name, top_k=top_k)
-        st.write(related_texts)
-        # st.write(related_texts)
+
         llm = ChatGoogleGenerativeAI(
             model="gemini-2.0-flash-exp",
             temperature=0.6,
             google_api_key=api_key
         )
         response = generate_response(llm, related_texts, user_query)
-        # if related_texts:
-        #     st.session_state.chat_history.chat_memory.add_user_message(user_query)
-        #     st.session_state.chat_history.chat_memory.add_ai_message(response)
-        #     return  response
-        # else:    
-        #     return response  
+        
         st.session_state.chat_history.chat_memory.add_user_message(user_query)
         st.session_state.chat_history.chat_memory.add_ai_message(response)
         return  response

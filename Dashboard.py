@@ -133,13 +133,16 @@ def query_ai_page():
             collection_name=collection_name,
             query=query_embedding,
             search_params=SearchParams(hnsw_ef=128),
-            limit=top_k
+            limit=top_k.
+            query_filter=Filter(
+            must=[FieldCondition(key="unique_id", match=MatchValue(value=unique_id))]
+            )
         )
         return [
             # result.payload["text"]
             result.payload.get("text", "No related text available")
             for result in search_results.points
-            if result.payload.get("unique_id") == unique_id
+            # if result.payload.get("unique_id") == unique_id
         ]
 
     def generate_response(llm, related_texts, user_query):

@@ -128,22 +128,21 @@ def query_ai_page():
         embeddings_model = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004", google_api_key=api_key)
         return embeddings_model.embed_query(query)
 
-    def search_related_text(query_embedding,unique_id, collection_name, top_k=3):
+    def search_related_text(query_embedding, unique_id, collection_name, top_k=3):
         search_results = qdrant_client.query_points(
             collection_name=collection_name,
-            query=query_embedding,
-            search_params=SearchParams(hnsw_ef=128),
-            limit=top_k.
+            query=query_embedding,  # Ensure this is a list
             query_filter=Filter(
-            must=[FieldCondition(key="unique_id", match=MatchValue(value=unique_id))]
-            )
+                must=[FieldCondition(key="unique_id", match=MatchValue(value=unique_id))]
+            ),
+            limit=top_k  # Fixed syntax error
         )
+    
         return [
-            # result.payload["text"]
             result.payload.get("text", "No related text available")
             for result in search_results.points
-            # if result.payload.get("unique_id") == unique_id
         ]
+
 
     def generate_response(llm, related_texts, user_query):
         memory = st.session_state.chat_history  # Use session memory

@@ -152,7 +152,7 @@ def query_ai_page():
             f"User: {message.content}" if isinstance(message, HumanMessage) else f"Assistant: {message.content}"
             for message in conversation_history
         ])
-        st.success(f"Conversation history loaded:\n{formatted_history}\n")
+        # st.success(f"Conversation history loaded:\n{formatted_history}\n")
         if related_texts:
             formatted_text = "\n".join(related_texts)
             prompt = f"""
@@ -264,10 +264,10 @@ def query_ai_page():
     st.markdown("""
          <style>
                .block-container {
-                    padding-top: 3rem;
+                    padding-top: 4rem;
                     padding-bottom: 0rem;
                     padding-left: 0rem;
-                    padding-right: 2rem;
+                    padding-right: 1rem;
                 }
          </style>
     """, unsafe_allow_html=True)

@@ -184,18 +184,8 @@ def query_ai_page():
             """
     
         response = llm.invoke(prompt)
-        
-        if related_texts:
-            st.session_state.chat_history.chat_memory.add_user_message(user_query)
-            st.session_state.chat_history.chat_memory.add_ai_message(response)
-            return  response.content.strip()
-
-        else:
-            return  response.content.strip()
-        
-        
-
-    # def collections_list(qdrant_client):
+        return  response.content.strip()
+    
     def list_unique_ids_in_collection(qdrant_client, collection_name, limit=100):
         unique_ids = set()
         next_page_offset = None
@@ -227,8 +217,12 @@ def query_ai_page():
             google_api_key=api_key
         )
         response = generate_response(llm, related_texts, user_query)
-    
-        return response  
+        if related_texts:
+            st.session_state.chat_history.chat_memory.add_user_message(user_query)
+            st.session_state.chat_history.chat_memory.add_ai_message(response)
+            return  response
+        else:    
+            return response  
         
     st.title("AI Query Pipeline")
     st.write("Looking for specific information? Type your question and select the Hospital ID (Name) to get results instantly!")

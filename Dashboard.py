@@ -144,14 +144,13 @@ def query_ai_page():
     def generate_response(llm, related_texts, user_query):
         memory = st.session_state.chat_history  # Use session memory
         conversation_history = st.session_state.chat_history.chat_memory.messages
-       
-        st.success("Response generating")
+       st.success("Response generating")
         # conversation_history = memory.chat_memory.messages
         formatted_history = "\n".join([
             f"User: {message.content}" if isinstance(message, HumanMessage) else f"Assistant: {message.content}"
             for message in conversation_history
         ])
-        
+        st.success("formated")
         st.success(f"{formatted_history}\n")
         if related_texts:
             formatted_text = "\n".join(related_texts)
@@ -185,6 +184,7 @@ def query_ai_page():
             """
     
         response = llm.invoke(prompt)
+        st.success(f"Response:{response}")
         return  response.content.strip()
     
     def list_unique_ids_in_collection(qdrant_client, collection_name, limit=100):

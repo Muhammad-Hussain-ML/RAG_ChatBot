@@ -247,11 +247,15 @@ def query_ai_page():
 
     qdrant_client = QdrantClient(
         url=os.getenv("QDRANT_URL"),
-        api_key=os.getenv("QDRANT_API_KEY"),
+        qdrant_api_key=os.getenv("QDRANT_API_KEY"),
     )
     
     collection_name = "new_documents_practice"
     api_key = os.getenv("GOOGLE_API_KEY")
+    
+    sst.success(f"url key{url}")
+    sst.success(f"\nqdrant_api_key{qdrant_api_key}")    
+    sst.success(f"\nAPI key{api_key}")
     if not api_key:
         st.error("Google API Key is missing! Please check your environment variables.")
 

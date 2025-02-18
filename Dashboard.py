@@ -260,21 +260,68 @@ def query_ai_page():
             st.error(f"Error fetching hospitals ID: {e}")
             hospitals = ["Error fetching hospitals ID"]
 
-    
-    user_query = st.text_input("Enter your Query:")    
-    unique_id = st.selectbox("Select Hospiatl ID/Name:", options=hospitals)
+    # Custom CSS to optimize page layout
+    st.markdown("""
+         <style>
+               .block-container {
+                    padding-top: 1rem;
+                    padding-bottom: 0rem;
+                    padding-left: 0rem;
+                    padding-right: 5rem;
+                }
+         </style>
+    """, unsafe_allow_html=True)
+
+    # user_query = st.text_input("Enter your Query:")    
+    # unique_id = st.selectbox("Select Hospiatl ID/Name:", options=hospitals)
 
     # here change
     if unique_id != st.session_state.last_unique_id:
         st.session_state.chat_history = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
         st.session_state.last_unique_id = unique_id 
-        
-    if st.button("Run Query"):
+    # Page Content
+    col1, col2 = st.columns([2, 1])  # Two columns with ratio (3:1)
+    
+    # Title and Unique ID dropdown placed side by side
+    with col1:
+        st.title("AI Query Chat")
+    
+    with col2:
+        unique_id = st.selectbox("Select Hospital Name/ID:", options=unique_ids)
+
+    if "messages" not in st.session_state:
+      st.session_state.messages = []
+
+    # Display the conversation history (user messages and assistant replies)
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])  
+
+    # User inputs
+    user_query = st.chat_input("Enter your Query:")
+    
+    # Button to run pipeline
+    if user_query:    
+    # if st.button("Run Query"):
         if google_api_key and qdrant_client and collection_name and user_query:
+
+            # Append user's message to chat
+            st.session_state.messages.append({"role": "user", "content": user_query})
+            
+            # Display user's message in the chat interface
+            with st.chat_message("user"):
+                st.markdown(user_query)
+
             try:
                 with st.spinner("Processing your query..."):
                     response = pipeline(google_api_key, qdrant_client, collection_name, user_query,unique_id,top_k=4)
-                st.write("AI :", response)
+
+                assistant_reply = response  # This is the assistant's response
+                with st.chat_message("assistant"):
+                    st.markdown(assistant_reply)
+
+                st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
+                # st.write("AI :", response)
             except Exception as e:
                 st.error(f"An error occurred: {e}")
         else:

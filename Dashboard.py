@@ -252,11 +252,8 @@ def query_ai_page():
     
     collection_name = "new_documents_practice"
     api_key = os.getenv("GOOGLE_API_KEY")
-    
-    sst.success(f"url key{url}")
-    sst.success(f"\nqdrant_api_key{qdrant_api_key}")    
-    sst.success(f"\nAPI key{api_key}")
-    if not api_key:
+
+    if not google_api_key:
         st.error("Google API Key is missing! Please check your environment variables.")
 
     # Fetch unique IDs for the dropdown
@@ -282,7 +279,7 @@ def query_ai_page():
         if api_key and qdrant_client and collection_name and user_query:
             try:
                 with st.spinner("Processing your query..."):
-                    response = pipeline(api_key, qdrant_client, collection_name, user_query,unique_id,top_k=2)
+                    response = pipeline(google_api_key, qdrant_client, collection_name, user_query,unique_id,top_k=4)
                 st.write("AI :", response)
             except Exception as e:
                 st.error(f"An error occurred: {e}")

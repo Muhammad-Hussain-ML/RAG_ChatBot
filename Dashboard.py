@@ -236,8 +236,8 @@ def query_ai_page():
         st.session_state.chat_history.chat_memory.add_ai_message(response)
         return  response
         
-    st.title("AI Query Pipeline")
-    st.write("Looking for specific information? Type your question and select the Hospital ID (Name) to get results instantly!")
+    # st.title("AI Query Pipeline")
+    # st.write("Looking for specific information? Type your question and select the Hospital ID (Name) to get results instantly!")
 
     qdrant_client = QdrantClient(
         url=os.getenv("QDRANT_URL"),

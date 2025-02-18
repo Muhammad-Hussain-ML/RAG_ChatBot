@@ -230,12 +230,15 @@ def query_ai_page():
             google_api_key=api_key
         )
         response = generate_response(llm, related_texts, user_query)
-        if related_texts:
-            st.session_state.chat_history.chat_memory.add_user_message(user_query)
-            st.session_state.chat_history.chat_memory.add_ai_message(response)
-            return  response
-        else:    
-            return response  
+        # if related_texts:
+        #     st.session_state.chat_history.chat_memory.add_user_message(user_query)
+        #     st.session_state.chat_history.chat_memory.add_ai_message(response)
+        #     return  response
+        # else:    
+        #     return response  
+        st.session_state.chat_history.chat_memory.add_user_message(user_query)
+        st.session_state.chat_history.chat_memory.add_ai_message(response)
+        return  response
         
     st.title("AI Query Pipeline")
     st.write("Looking for specific information? Type your question and select the Hospital ID (Name) to get results instantly!")

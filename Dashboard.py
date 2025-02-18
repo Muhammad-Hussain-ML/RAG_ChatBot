@@ -223,7 +223,7 @@ def query_ai_page():
 
     def pipeline(api_key, qdrant_client, collection_name, user_query, unique_id, top_k=4):
         query_embeddings = query_embedding(user_query, api_key)
-
+        related_texts = search_related_text(query_embedding, unique_id, collection_name, top_k=top_k)
         llm = ChatGoogleGenerativeAI(
             model="gemini-2.0-flash-exp",
             temperature=0.6,

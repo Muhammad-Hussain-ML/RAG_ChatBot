@@ -16,24 +16,27 @@ from datetime import datetime
 
 # Define the Home Page
 def home_page():
-    st.title("Welcome to the RAG Document Explorer!")
+    st.title("Welcome to RAG Document Explorer!")
+
     st.write("""
-        This dashboard is designed to enhance your workflows with two cutting-edge tools:
-
-        ### Features:
-        1. **Upload PDFs for Advanced Storage**:  
-           - Easily upload PDF files and process them for storage.
-
-        2. **Query AI for Answers**:  
-           - Ask questions and get useful responses based on the stored data.
-
-        ### Usage Guide:
-        - Navigate to **PDF to Qdrant** to upload and process your documents.
-        - Switch to **Query AI** to interact with your data by entering specific queries.
-        - This streamlined interface ensures an intuitive and seamless experience.
-
-        ### Get Started:
-        Use the navigation bar on the left to access the features. Start by uploading a PDF or querying the database!
+    Enhance your workflow with powerful AI-driven tools:
+    
+    ### Features:
+    1. **PDF Upload & Storage**  
+       - Upload PDFs, extract content, and store embeddings in Qdrant.
+    
+    2. **AI-Powered Querying**  
+       - Retrieve insights from stored documents with smart search.
+    
+    3. **Query Analysis & Management**  
+       - Track and manage user queries stored in MongoDB.
+    
+    ### How It Works:
+    - **PDF to Qdrant**: Upload and process documents.  
+    - **Query AI**: Retrieve insights from indexed content.  
+    - **Query Analysis**: Monitor and optimize user interactions.
+    
+    Use the sidebar to navigate!
     """)
 
 # Define the PDF to Qdrant Page

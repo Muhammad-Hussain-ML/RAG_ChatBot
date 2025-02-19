@@ -118,6 +118,43 @@ def pdf_to_qdrant_page():
         else:
             st.error("Please provide all the required inputs.")
 
+................................
+# Define the Query History Page
+def query_history_page():
+    st.title("Query History")
+
+    # Connect to MongoDB
+    MONGO_URI = os.getenv("MONGO_URI")
+    client = MongoClient(MONGO_URI)
+    db = client["query_logs"] 
+    collection = db["user_queries"]
+
+    # Fetch unique IDs for the dropdown
+    @st.cache_data()
+    def get_unique_ids():
+        return collection.distinct("unique_id")
+    
+    unique_ids = get_unique_ids()
+
+    # Dropdown to select unique_id
+    unique_id = st.selectbox(
+        "**Select Hospital Name or ID:**",
+        index=None,
+        placeholder="Select a hospital or ID...",
+        options=unique_ids
+    )
+
+    if unique_id:
+        # Fetch all queries related to the selected unique_id, sorted by latest
+        queries = list(collection.find({"unique_id": unique_id}).sort("timestamp", -1))
+        
+        if queries:
+            # Convert data to DataFrame for display
+            df = pd.DataFrame(queries, columns=["query", "timestamp"])
+            st.dataframe(df, use_container_width=True)
+        else:
+            st.warning("No queries found for the selected hospital ID.")
+................................
 # Define the Query AI Page
 def query_ai_page():
     # Initialize session state for chat history and unique_id tracking
@@ -350,7 +387,7 @@ def query_ai_page():
 
 # Sidebar navigation
 st.sidebar.title("Dashboard Navigation")
-page = st.sidebar.radio("Go to Page:", ["Home", "Upload PDFs", "Query AI"])
+page = st.sidebar.radio("Go to Page:", ["Home", "Upload PDFs", "Query AI", "Query Analysis"])
 
 # Render the selected page
 if page == "Home":
@@ -359,3 +396,7 @@ elif page == "Upload PDFs":
     pdf_to_qdrant_page()
 elif page == "Query AI":
     query_ai_page()
+elif page == "Query Analysis":
+    query_history_page()
+
+    

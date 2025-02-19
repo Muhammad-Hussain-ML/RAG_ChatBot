@@ -117,8 +117,7 @@ def pdf_to_qdrant_page():
                 st.error(f"An error occurred: {e}")
         else:
             st.error("Please provide all the required inputs.")
-
-................................
+            
 # Define the Query History Page
 def query_history_page():
     st.title("Query History")
@@ -154,7 +153,7 @@ def query_history_page():
             st.dataframe(df, use_container_width=True)
         else:
             st.warning("No queries found for the selected hospital ID.")
-................................
+
 # Define the Query AI Page
 def query_ai_page():
     # Initialize session state for chat history and unique_id tracking

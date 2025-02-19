@@ -10,6 +10,8 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from langchain.schema import HumanMessage, AIMessage
 import os
+from pymongo import MongoClient
+from datetime import datetime
 
 # Define the Home Page
 def home_page():
@@ -123,7 +125,12 @@ def query_ai_page():
         st.session_state.chat_history = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     if "last_unique_id" not in st.session_state:
         st.session_state.last_unique_id = None
-        
+
+    MONGO_URI = os.getenv("MONGO_URI"),
+    client = MongoClient(MONGO_URI)
+    db = client["query_logs"] 
+    collection = db["user_queries"]
+
     def query_embedding(query, api_key):
         embeddings_model = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004", google_api_key=api_key)
         return embeddings_model.embed_query(query)
@@ -310,8 +317,15 @@ def query_ai_page():
     # Button to run pipeline
     if user_query:    
     # if st.button("Run Query"):
-        if google_api_key and qdrant_client and collection_name and user_query:
+        if google_api_key and qdrant_client and collection_name and user_query and unique_id:
 
+            query_data = {
+                "query": user_query,
+                "unique_id": unique_id,
+                "timestamp": datetime.utcnow()  
+            }
+            collection.insert_one(query_data)
+    
             # Append user's message to chat
             st.session_state.messages.append({"role": "user", "content": user_query})
             

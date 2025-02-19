@@ -16,25 +16,25 @@ from datetime import datetime
 
 # Define the Home Page
 def home_page():
-    st.title("Welcome to RAG Document Explorer!")
+    st.title("Welcome to RAG Hospital Assistant!")
 
     st.write("""
-    Enhance your workflow with powerful AI-driven tools:
+    Streamline hospital information retrieval with AI-powered tools:
     
     ### Features:
     1. **PDF Upload & Storage**  
-       - Upload PDFs, extract content, and store embeddings in Qdrant.
+       - Upload hospital documents, extract content, and store embeddings in Qdrant.
     
     2. **AI-Powered Querying**  
-       - Retrieve insights from stored documents with smart search.
+       - Retrieve hospital-related insights using intelligent search.
     
     3. **Query Analysis & Management**  
-       - Track and manage user queries stored in MongoDB.
+       - Track and optimize hospital-related queries stored in MongoDB.
     
     ### How It Works:
-    - **PDF to Qdrant**: Upload and process documents.  
-    - **Query AI**: Retrieve insights from indexed content.  
-    - **Query Analysis**: Monitor and optimize user interactions.
+    - **PDF to Qdrant** → Upload and process hospital documents.  
+    - **Query AI** → Get accurate responses from indexed hospital data.  
+    - **Query Analysis** → Monitor and refine user interactions.
     
     Use the sidebar to navigate!
     """)

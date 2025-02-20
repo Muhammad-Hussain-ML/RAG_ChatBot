@@ -138,6 +138,7 @@ def query_history_page():
     @st.cache_data()
     def get_unique_ids():
         unique_ids = collection.distinct("unique_id")
+        st.success(unique_ids)
         return unique_ids
     
     unique_ids = get_unique_ids()

@@ -127,39 +127,45 @@ def pdf_to_qdrant_page():
 def query_history_page():
     st.title("Query History")
 
-    # Connect to MongoDB
-    MONGO_URI = os.getenv("MONGO_URI")
-    client = MongoClient(MONGO_URI)
-    db = client["query_logs"] 
+    # Cached MongoDB connection
+    @st.cache_resource()
+    def get_mongo_client():
+        MONGO_URI = os.getenv("MONGO_URI")
+        return MongoClient(MONGO_URI)
+
+    client = get_mongo_client()
+    db = client["query_logs"]
     collection = db["user_queries"]
 
-
-    # Fetch unique IDs for the dropdown
-    @st.cache_data()
+    # Fetch unique IDs without caching
     def get_unique_ids():
-        unique_ids = collection.distinct("unique_id")
-        st.success(unique_ids)
-        return unique_ids
+        return collection.distinct("unique_id")
+
+    # Initialize session state for unique_ids
+    if "unique_ids" not in st.session_state:
+        st.session_state.unique_ids = get_unique_ids()
+
+    # # Refresh button (optional)
+    # if st.button("Refresh Unique IDs 🔄"):
+    #     st.session_state.unique_ids = get_unique_ids()
     
-    unique_ids = get_unique_ids()
+    # unique_ids = get_unique_ids()
     # Dropdown to select unique_id
     unique_id = st.selectbox(
         "**Select Hospital Name or ID:**",
-        index=None,
-        placeholder="Select a hospital or ID...",
-        options=unique_ids
+        options=["Select a hospital or ID..."] + st.session_state.unique_ids
     )
 
-    if unique_id:
+    if unique_id and unique_id != "Select a hospital or ID...":
         # Fetch all queries related to the selected unique_id, sorted by latest
         queries = list(collection.find({"unique_id": unique_id}).sort("timestamp", -1))
-        
+
         if queries:
-            # Convert data to DataFrame for display
-            df = pd.DataFrame(queries, columns=["query", "timestamp"])
+            df = pd.DataFrame(queries).drop(columns=["_id"], errors="ignore")
             st.dataframe(df, use_container_width=True)
         else:
             st.warning("No queries found for the selected hospital ID.")
+
 
 # Define the Query AI Page
 def query_ai_page():

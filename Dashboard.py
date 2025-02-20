@@ -4,7 +4,8 @@ from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from qdrant_client.http.models import VectorParams, Distance, SearchParams
-from qdrant_client.models import PointStruct, Filter, FieldCondition, MatchValue
+from qdrant_client.models import PointStruct, Filter, FieldCondition
+from qdrant_client.models import MatchValue
 from qdrant_client import QdrantClient
 from langchain.vectorstores import Qdrant
 from langchain.memory import ConversationBufferMemory

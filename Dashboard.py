@@ -124,9 +124,16 @@ def pdf_to_qdrant_page():
             st.error("Please provide all the required inputs.")
             
 # Define the Query History Page
+import os
+import pandas as pd
+import streamlit as st
+from pymongo import MongoClient
+
 def query_history_page():
     st.title("Query History")
 
+    # Cached MongoDB connection
+    @st.cache_resource()
     def get_mongo_client():
         MONGO_URI = os.getenv("MONGO_URI")
         return MongoClient(MONGO_URI)
@@ -135,23 +142,14 @@ def query_history_page():
     db = client["query_logs"]
     collection = db["user_queries"]
 
-    # Fetch unique IDs without caching
+    # Fetch unique IDs dynamically without caching
     def get_unique_ids():
         return collection.distinct("unique_id")
 
-    # Initialize session state for unique_ids
-    if "unique_ids" not in st.session_state:
-        st.session_state.unique_ids = get_unique_ids()
-
-    # Refresh button (optional)
-    if st.button("Refresh Unique IDs 🔄"):
-        st.session_state.unique_ids = get_unique_ids()
-    
-    # unique_ids = get_unique_ids()
-    # Dropdown to select unique_id
+    # Dropdown to select unique_id (fetches fresh IDs on every run)
     unique_id = st.selectbox(
         "**Select Hospital Name or ID:**",
-        options=["Select a hospital or ID..."] + st.session_state.unique_ids
+        options=["Select a hospital or ID..."] + get_unique_ids()
     )
 
     if unique_id and unique_id != "Select a hospital or ID...":

@@ -139,7 +139,7 @@ def query_history_page():
         return collection.distinct("unique_id")
     
     unique_ids = get_unique_ids()
-
+    st.success(unique_ids)
     # Dropdown to select unique_id
     unique_id = st.selectbox(
         "**Select Hospital Name or ID:**",

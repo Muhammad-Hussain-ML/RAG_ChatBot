@@ -135,12 +135,12 @@ def query_history_page():
 
     last_10_queries = collection.find().sort("timestamp", -1)
 
-    St.write("\nLast 10 Queries:\n")
+    st.write("\nLast 10 Queries:\n")
     for query in last_10_queries:
-         St.write(f"Query: {query['query']}")
-         St.write(f"Unique ID: {query['unique_id']}")
-         St.write(f"Timestamp: {query['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}")
-         St.write("-" * 40)
+         st.write(f"Query: {query['query']}")
+         st.write(f"Unique ID: {query['unique_id']}")
+         st.write(f"Timestamp: {query['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}")
+         st.write("-" * 40)
 
     # # Fetch unique IDs for the dropdown
     # @st.cache_data()

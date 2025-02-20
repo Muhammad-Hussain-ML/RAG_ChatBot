@@ -133,31 +133,40 @@ def query_history_page():
     db = client["query_logs"] 
     collection = db["user_queries"]
 
-    # Fetch unique IDs for the dropdown
-    @st.cache_data()
-    def get_unique_ids():
-        return collection.distinct("unique_id")
-    
-    unique_ids = get_unique_ids()
-    st.success(unique_ids)
-    # Dropdown to select unique_id
-    unique_id = st.selectbox(
-        "**Select Hospital Name or ID:**",
-        index=None,
-        placeholder="Select a hospital or ID...",
-        options=unique_ids
-    )
+    last_10_queries = collection.find().sort("timestamp", -1)
 
-    if unique_id:
-        # Fetch all queries related to the selected unique_id, sorted by latest
-        queries = list(collection.find({"unique_id": unique_id}).sort("timestamp", -1))
+    St.write("\nLast 10 Queries:\n")
+    for query in last_10_queries:
+         St.write(f"Query: {query['query']}")
+         St.write(f"Unique ID: {query['unique_id']}")
+         St.write(f"Timestamp: {query['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}")
+         St.write("-" * 40)
+
+    # # Fetch unique IDs for the dropdown
+    # @st.cache_data()
+    # def get_unique_ids():
+    #     return collection.distinct("unique_id")
+    
+    # unique_ids = get_unique_ids()
+    # st.success(unique_ids)
+    # # Dropdown to select unique_id
+    # unique_id = st.selectbox(
+    #     "**Select Hospital Name or ID:**",
+    #     index=None,
+    #     placeholder="Select a hospital or ID...",
+    #     options=unique_ids
+    # )
+
+    # if unique_id:
+    #     # Fetch all queries related to the selected unique_id, sorted by latest
+    #     queries = list(collection.find({"unique_id": unique_id}).sort("timestamp", -1))
         
-        if queries:
-            # Convert data to DataFrame for display
-            df = pd.DataFrame(queries, columns=["query", "timestamp"])
-            st.dataframe(df, use_container_width=True)
-        else:
-            st.warning("No queries found for the selected hospital ID.")
+    #     if queries:
+    #         # Convert data to DataFrame for display
+    #         df = pd.DataFrame(queries, columns=["query", "timestamp"])
+    #         st.dataframe(df, use_container_width=True)
+    #     else:
+    #         st.warning("No queries found for the selected hospital ID.")
 
 # Define the Query AI Page
 def query_ai_page():
@@ -366,6 +375,7 @@ def query_ai_page():
                 "timestamp": datetime.utcnow()  
             }
             collection.insert_one(query_data)
+            
     
             # Append user's message to chat
             st.session_state.messages.append({"role": "user", "content": user_query})

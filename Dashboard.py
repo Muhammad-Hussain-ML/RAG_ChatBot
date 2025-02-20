@@ -138,11 +138,9 @@ def query_history_page():
     @st.cache_data()
     def get_unique_ids():
         unique_ids = collection.distinct("unique_id")
-        st.warning(f"unique IDs: {unique_ids}")
         return unique_ids
     
     unique_ids = get_unique_ids()
-    st.success(unique_ids)
     # Dropdown to select unique_id
     unique_id = st.selectbox(
         "**Select Hospital Name or ID:**",

@@ -128,7 +128,7 @@ def query_history_page():
     st.title("Query History")
 
     # Cached MongoDB connection
-    @st.cache_resource()
+    # @st.cache_resource()
     def get_mongo_client():
         MONGO_URI = os.getenv("MONGO_URI")
         return MongoClient(MONGO_URI)

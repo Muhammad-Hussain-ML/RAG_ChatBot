@@ -95,7 +95,7 @@ def pdf_to_qdrant_page():
     """)
 
     uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
-    collection_name = "new_documents_practice"
+    collection_name = "EMR-Chains-Data"
     unique_id = st.text_input("Enter a Uique Hospital ID/Name:")
     run_pipeline = st.button("Run Pipeline")
 

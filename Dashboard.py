@@ -296,7 +296,7 @@ def query_ai_page():
         api_key=os.getenv("QDRANT_API_KEY"),
     )
     
-    collection_name = "new_documents_practice"
+    collection_name = "new_practice"
     google_api_key = os.getenv("GOOGLE_API_KEY")
 
     if not google_api_key:

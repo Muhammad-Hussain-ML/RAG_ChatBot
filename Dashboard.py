@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import uuid
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
@@ -79,7 +80,8 @@ def pdf_to_qdrant_page():
         st.success("Storing Embeddings in Qdrant")
         points = [
             PointStruct(
-                id=i, vector=embeddings[i],
+                id=str(uuid.uuid4()),
+                vector=embeddings[i],
                 payload={ "unique_id": unique_id, "chunk_id": i, "text": text_chunks[i].page_content}
             )
             for i in range(len(embeddings))

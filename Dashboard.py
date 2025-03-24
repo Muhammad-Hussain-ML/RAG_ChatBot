@@ -125,7 +125,7 @@ def pdf_to_qdrant_page():
         else:
             st.error("Please provide all the required inputs.")
             
-# Define the Query History Page
+
 import os
 import pandas as pd
 import streamlit as st
@@ -144,11 +144,10 @@ def query_history_page():
     db = client["query_logs"]
     collection = db["user_queries"]
 
-    # Fetch unique IDs dynamically without caching
     def get_unique_ids():
         return collection.distinct("unique_id")
 
-    # Dropdown to select unique_id (fetches fresh IDs on every run)
+    
     unique_id = st.selectbox(
         "**Select Hospital Name or ID:**",
         options=["Select a hospital or ID..."] + get_unique_ids()
@@ -165,7 +164,7 @@ def query_history_page():
             st.warning("No queries found for the selected hospital ID.")
 
 
-# Define the Query AI Page
+
 def query_ai_page():
     # Initialize session state for chat history and unique_id tracking
     if "chat_history" not in st.session_state:
@@ -290,8 +289,7 @@ def query_ai_page():
         st.session_state.chat_history.chat_memory.add_ai_message(response)
         return  response
         
-    # st.title("AI Query Pipeline")
-    # st.write("Looking for specific information? Type your question and select the Hospital ID (Name) to get results instantly!")
+
 
     qdrant_client = QdrantClient(
         url=os.getenv("QDRANT_URL"),
@@ -326,14 +324,11 @@ def query_ai_page():
          </style>
     """, unsafe_allow_html=True)
 
-    # user_query = st.text_input("Enter your Query:")    
-    # unique_id = st.selectbox("Select Hospiatl ID/Name:", options=hospitals)
-
    
-    # Page Content
+
     col1, col2 = st.columns([3, 1])  # Two columns with ratio (3:1)
     
-    # Title and Unique ID dropdown placed side by side
+
     with col1:
         st.title("AI Query Chat")
     
@@ -345,7 +340,7 @@ def query_ai_page():
             options=unique_ids
         )
 
-     # here change
+
     if unique_id != st.session_state.last_unique_id:
         st.session_state.chat_history = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
         st.session_state.last_unique_id = unique_id 
@@ -363,7 +358,7 @@ def query_ai_page():
     
     # Button to run pipeline
     if user_query:    
-    # if st.button("Run Query"):
+
         if google_api_key and qdrant_client and collection_name and user_query and unique_id:
 
             query_data = {
@@ -374,10 +369,10 @@ def query_ai_page():
             collection.insert_one(query_data)
             
     
-            # Append user's message to chat
+
             st.session_state.messages.append({"role": "user", "content": user_query})
             
-            # Display user's message in the chat interface
+
             with st.chat_message("user"):
                 st.markdown(user_query)
 
@@ -390,13 +385,13 @@ def query_ai_page():
                     st.markdown(assistant_reply)
 
                 st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
-                # st.write("AI :", response)
+
             except Exception as e:
                 st.error(f"An error occurred: {e}")
         else:
             st.error("Please provide all the required inputs.")
 
-# Sidebar navigation
+
 st.sidebar.title("Dashboard Navigation")
 page = st.sidebar.radio("Go to Page:", ["Home", "Upload PDFs", "Query AI", "Query Analysis"])
 
